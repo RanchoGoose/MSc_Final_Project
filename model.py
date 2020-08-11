@@ -3,7 +3,8 @@ from keras.layers import Conv2DTranspose, ConvLSTM2D, BatchNormalization, TimeDi
 from keras.models import Sequential, load_model
 from keras_layer_normalization import LayerNormalization
 
-def get_model(reload_model=True):
+def get_model(reload_model=False):
+# def get_model():
     """
     Parameters
     ----------

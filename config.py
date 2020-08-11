@@ -1,6 +1,6 @@
 class Config:
-  DATASET_PATH ="YOUR_WORKING_DIRECTORY/UCSD_Anomaly_Dataset.v1p2/UCSDped1/Train"
-  SINGLE_TEST_PATH = "YOUR_WORKING_DIRECTORY/UCSD_Anomaly_Dataset.v1p2/UCSDped1/Test/Test032"
+  DATASET_PATH ="D:/car_accident_detection/dataset/manual/sherbrooke_frames"
+  SINGLE_TEST_PATH = "D:/car_accident_detection/dataset/manual/extracted_frames/000000"
   BATCH_SIZE = 4
   EPOCHS = 3
-  MODEL_PATH = "YOUR_WORKING_DIRECTORY/model.hdf5
+  MODEL_PATH = "C:/Users/REXzh/PycharmProjects/MSc_Final_Project/model.hdf5"
