@@ -9,11 +9,11 @@ from keras_layer_normalization import LayerNormalization
 import matplotlib.pyplot as plt
 
 class Config:
-    DATASET_PATH = "/Users/zhangdapang/Documents/UCSD_Anomaly_Dataset.v1p2/UCSDped1/Train"
-    SINGLE_TEST_PATH = "/Users/zhangdapang/Documents/UCSD_Anomaly_Dataset.v1p2/UCSDped1/Test/Test032"
+    DATASET_PATH = "C:/Users/REXzh/Downloads/UCSD_Anomaly_Dataset.v1p2/UCSDped1/Train"
+    SINGLE_TEST_PATH = "C:/Users/REXzh/Downloads/UCSD_Anomaly_Dataset.v1p2/UCSDped1/Test/Test014"
     BATCH_SIZE = 4
     EPOCHS = 3
-    MODEL_PATH = "/Users/zhangdapang/Documents/UCSD_Anomaly_Dataset.v1p2/model.hdf5"
+    MODEL_PATH = "C:/Users/REXzh/PycharmProjects/MSc_Final_Project/modeltest.hdf5"
 
 
 def get_clips_by_stride(stride, frames_list, sequence_size):

@@ -2,6 +2,7 @@ from os import listdir
 from os.path import isfile, join, isdir
 import numpy as np
 from PIL import Image
+# import Config
 
 def get_clips_by_stride(stride, frames_list, sequence_size):
     """ For data augmenting purposes.

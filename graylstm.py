@@ -13,10 +13,10 @@ import matplotlib.pyplot as plt
 
 
 DATASET_PATH = "D:/car_accident_detection/dataset/manual/sherbrooke_frames"
-SINGLE_TEST_PATH = "D:/car_accident_detection/dataset/manual/extracted_frames/000013"
+SINGLE_TEST_PATH = "D:/car_accident_detection/dataset/manual/extracted_frames/000002"
 BATCH_SIZE = 4
 EPOCHS = 10
-MODEL_PATH = "C:/Users/REXzh/PycharmProjects/MSc_Final_Project/modelep10.hdf5"
+MODEL_PATH = "C:/Users/REXzh/PycharmProjects/MSc_Final_Project/graymodelep10.hdf5"
 
 def get_clips_by_stride(stride, frames_list, sequence_size):
     """ For data augmenting purposes.
@@ -35,7 +35,7 @@ def get_clips_by_stride(stride, frames_list, sequence_size):
     """
     clips = []
     sz = len(frames_list)
-    clip = np.zeros(shape=(sequence_size, 256, 256, 3))
+    clip = np.zeros(shape=(sequence_size, 256, 256, 1))
     cnt = 0
     for start in range(0, stride):
         for i in range(start, sz, stride):
@@ -64,7 +64,7 @@ def get_training_set():
                 img_path = join(directory_path, c)
                 if str(img_path)[-3:] == "jpg":
                     img = tf.io.read_file(img_path)
-                    img = tf.image.decode_image(img, channels=3)
+                    img = tf.image.decode_image(img, channels=1)
                     img = (tf.cast(img, tf.float32))
                     img = (img / 256.0)
                     img = tf.image.resize(img, (256, 256))
@@ -92,7 +92,7 @@ def get_model(reload_model=False):
     training_set = get_training_set()
     training_set = np.array(training_set)
     seq = Sequential()
-    seq.add(TimeDistributed(Conv2D(128, (11, 11), strides=4, padding="same"), batch_input_shape=(None, 10, 256, 256, 3)))
+    seq.add(TimeDistributed(Conv2D(128, (11, 11), strides=4, padding="same"), batch_input_shape=(None, 10, 256, 256, 1)))
     seq.add(tf.keras.layers.LayerNormalization())
     seq.add(TimeDistributed(Conv2D(64, (5, 5), strides=2, padding="same")))
     seq.add(tf.keras.layers.LayerNormalization())
@@ -117,15 +117,26 @@ def get_model(reload_model=False):
     return seq
 
 def get_single_test():
-    sz = 305
-    test = np.zeros(shape=(sz, 256, 256, 3))
+    framenum = 0
+    for f in sorted(listdir(SINGLE_TEST_PATH)):
+        if str(join(SINGLE_TEST_PATH, f))[-3:] == "jpg":
+            framenum = framenum + 1
+    sz = framenum
+    test = np.zeros(shape=(sz, 256, 256, 1))
     cnt = 0
     # all_frames = []
     # test = []
     for f in sorted(listdir(SINGLE_TEST_PATH)):
         if str(join(SINGLE_TEST_PATH, f))[-3:] == "jpg":
-            img = Image.open(join(SINGLE_TEST_PATH, f)).resize((256, 256))
-            img = np.array(img, dtype=np.float32) / 256.0
+            # img = Image.open(join(SINGLE_TEST_PATH, f)).resize((256, 256))
+            # img = np.array(img, dtype=np.float32) / 256.0
+
+            img = tf.io.read_file(join(SINGLE_TEST_PATH, f))
+            img = tf.image.decode_image(img, channels=1)
+            img = (tf.cast(img, tf.float32))
+            img = (img / 256.0)
+            img = tf.image.resize(img, (256, 256))
+
             # all_frames.append(img)
             # sz = len(all_frames)
             # test = np.zeros(shape=(sz, 256, 256, 3))
@@ -138,17 +149,17 @@ print("got model")
 test = get_single_test()
 print("got test")
 sz = test.shape[0] - 10
-sequences = np.zeros((sz, 10, 256, 256, 3))
+sequences = np.zeros((sz, 10, 256, 256, 1))
 # apply the sliding window technique to get the sequences
 for i in range(0, sz):
-    clip = np.zeros((10, 256, 256, 3))
+    clip = np.zeros((10, 256, 256, 1))
     for j in range(0, 10):
         clip[j] = test[i + j, :, :, :]
     sequences[i] = clip
 
 # get the reconstruction cost of all the sequences
 reconstructed_sequences = model.predict(sequences,batch_size=4)
-sequences_reconstruction_cost = np.array([np.linalg.norm(np.subtract(sequences[i],reconstructed_sequences[i])) for i in range(0,sz)])
+sequences_reconstruction_cost = np.array([np.linalg.norm(np.subtract(sequences[i],reconstructed_sequences[i])) for i in range(0, sz)])
 sa = (sequences_reconstruction_cost - np.min(sequences_reconstruction_cost)) / np.max(sequences_reconstruction_cost)
 sr = 1.0 - sa
 
@@ -156,4 +167,6 @@ sr = 1.0 - sa
 plt.plot(sr)
 plt.ylabel('regularity score Sr(t)')
 plt.xlabel('frame t')
+plt.savefig('C:/Users/REXzh/PycharmProjects/MSc_Final_Project/results/grayep10for02.png')
 plt.show()
+
