@@ -13,7 +13,7 @@ class Config:
     SINGLE_TEST_PATH = "/Users/zhangdapang/Documents/UCSD_Anomaly_Dataset.v1p2/UCSDped1/Test/Test032"
     BATCH_SIZE = 4
     EPOCHS = 3
-    MODEL_PATH = "/Users/zhangdapang/Documents/UCSD_Anomaly_Dataset.v1p2/model.hdf5"
+    MODEL_PATH = "/Users/zhangdapang/Documents/UCSD_Anomaly_Dataset.v1p2/modeluscd.hdf5"
 
 
 def get_clips_by_stride(stride, frames_list, sequence_size):
@@ -72,7 +72,7 @@ def get_training_set():
 
 
 
-def get_model(reload_model=True):
+def get_model(reload_model=False):
     """
     Parameters
     ----------
@@ -144,4 +144,5 @@ sr = 1.0 - sa
 plt.plot(sr)
 plt.ylabel('regularity score Sr(t)')
 plt.xlabel('frame t')
+plt.savefig('/Users/zhangdapang/Documents/UCSD_Anomaly_Dataset.v1p2/ucsd032.png')
 plt.show()
