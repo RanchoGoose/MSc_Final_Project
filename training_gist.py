@@ -2,6 +2,7 @@ from os import listdir
 from os.path import isfile, join, isdir
 import numpy as np
 from PIL import Image
+# import Config
 
 def get_clips_by_stride(stride, frames_list, sequence_size):
     """ For data augmenting purposes.
@@ -47,7 +48,7 @@ def get_training_set():
             # loop over all the images in the folder (0.tif,1.tif,..,199.tif)
             for c in sorted(listdir(directory_path)):
                 img_path = join(directory_path, c)
-                if str(img_path)[-3:] == "tif":
+                if str(img_path)[-3:] == "jpg":
                     img = Image.open(img_path).resize((256, 256))
                     img = np.array(img, dtype=np.float32) / 256.0
                     all_frames.append(img)
